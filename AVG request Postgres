@@ -1,0 +1,46 @@
+
+-- create
+CREATE TABLE users (id INTEGER, name VARCHAR);
+CREATE TABLE groups (id INTEGER, name VARCHAR);
+CREATE TABLE members (uid INTEGER, gid INTEGER);
+CREATE TABLE payments (id INTEGER, uid INTEGER, amount INTEGER, created TIMESTAMP );
+
+-- insert
+INSERT INTO users VALUES (0001, 'Clark');
+INSERT INTO users VALUES (0002, 'Kent');
+INSERT INTO users VALUES (0003, 'Barby');
+
+INSERT INTO groups VALUES
+(0004, 'member'),
+(0005, 'premium_member'),
+(0006, 'not_premium_member');
+
+INSERT INTO members VALUES
+(0001, 0004),
+(0002, 0005),
+(0003, 0006);
+
+INSERT INTO payments VALUES
+(0007, 0001, 500, '2023-07-22 19:10:25-07' ),
+(0008, 0001, 200, '2023-07-22 19:10:25-07' ),
+(0009, 0001, 100, '2023-07-21 19:10:25-07' ),
+(0010, 0001, 2, '2023-07-20 19:10:25-07' ),
+(0011, 0001, 10000000, '2023-07-1 19:10:25-07' ),
+
+(0012, 0002, 500, '2023-07-22 19:10:25-07' ),
+(0013, 0002, 1, '2023-07-22 19:10:25-07' ),
+(0014, 0002, 100, '2023-07-21 19:10:25-07' ),
+(0015, 0002, 2, '2023-07-21 19:10:25-07' ),
+(0016, 0002, 5, '2023-07-19 19:10:25-07' ),
+(0017, 0002, 10000000, '2023-07-1 19:10:25-07' ),
+
+(0018, 0003, 100000000, '2023-07-22 19:10:25-07' );
+
+-- fetch
+SELECT date_trunc('day', payments.created), avg(payments.amount)
+FROM payments, members, groups
+WHERE payments.uid = members.uid
+AND groups.id = members.gid
+AND groups.name IN ('member','premium_member')
+AND payments.created BETWEEN '2023-07-16 19:10:25-07' AND '2023-07-23 19:10:25-07'
+GROUP BY 1
